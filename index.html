@@ -2,107 +2,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jerome Paolo Bautista - Terminal Landing</title>
-    <style>
-        body {
-            margin: 0;
-            background: black;
-            color: #33ff33;
-            font-family: 'Courier New', Courier, monospace;
-            overflow: hidden;
-        }
-        .terminal {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-            text-align: center;
-        }
-        .glitch {
-            font-size: 2rem;
-            white-space: pre-line;
-            animation: blink 1s steps(2, start) infinite;
-        }
-        .button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: transparent;
-            border: 1px solid #33ff33;
-            color: #33ff33;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: 0.3s;
-            text-decoration: none;
-        }
-        .button:hover {
-            background-color: #33ff33;
-            color: black;
-        }
-        .background-animation {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: repeating-linear-gradient(
-                to bottom,
-                rgba(0, 255, 0, 0.05) 0px,
-                rgba(0, 255, 0, 0.05) 1px,
-                transparent 1px,
-                transparent 2px
-            );
-            animation: scroll 10s linear infinite;
-            z-index: 0;
-        }
-        @keyframes scroll {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 100%; }
-        }
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-    </style>
-    <!-- Meta Pixel Code -->
-    <script>
-        !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}(window, document,'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', 'YOUR_PIXEL_ID');
-        fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-        src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Meta Pixel Code -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jerome Paolo Bautista - HackBot</title>
+  <!-- Meta Pixel Placeholder -->
+  <!-- Insert Meta Pixel Code Below -->
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      color: #00ff00;
+      font-family: monospace;
+      overflow: hidden;
+    }
+
+    .matrix {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: black;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      padding: 40px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid #00ff00;
+      border-radius: 10px;
+      width: 80%;
+      box-shadow: 0 0 20px #00ff00;
+    }
+
+    .content h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00ff00;
+    }
+
+    .content p {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px #00ff00;
+    }
+
+    .btn {
+      background-color: #00ff00;
+      border: none;
+      color: black;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 5px;
+      box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+    }
+  </style>
 </head>
 <body>
-    <div class="background-animation"></div>
-    <div class="terminal">
-        <div class="glitch" id="terminal-text">[Connecting to Jerome Paolo Bautista's mainframe...]</div>
-        <a href="https://t.me/Jerome_hackbot" class="button">Получить бота в Telegram</a>
-    </div>
-    <script>
-        const text = [
-            "[Accessing secure node...]",
-            "[Decrypting interface...]",
-            "[Welcome, Agent Jerome Paolo Bautista]",
-            "[Initializing AI... OK]",
-            "[Awaiting further commands]"
-        ];
-        let i = 0;
-        const el = document.getElementById("terminal-text");
-        function loopText() {
-            el.textContent = text[i];
-            i = (i + 1) % text.length;
-            setTimeout(loopText, 2000);
+  <div class="matrix">
+    <canvas id="matrixCanvas"></canvas>
+  </div>
+
+  <div class="content">
+    <h1 id="typewriter"></h1>
+    <p>Jerome Paolo Bautista has deployed a tool.<br>Access the HackBot below.</p>
+    <a href="https://t.me/Jerome_hackbot" class="btn" onclick="playClickSound()">📲 Get the bot on Telegram</a>
+  </div>
+
+  <audio id="clickSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+  <script>
+    const canvas = document.getElementById("matrixCanvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    const letters = "01";
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#0F0";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
         }
-        loopText();
-    </script>
+
+        drops[i]++;
+      }
+    }
+
+    setInterval(draw, 33);
+
+    // Typing effect
+    const txt = "WELCOME, AGENT";
+    let i = 0;
+    const speed = 100;
+    function typeWriter() {
+      if (i < txt.length) {
+        document.getElementById("typewriter").innerHTML += txt.charAt(i);
+        i++;
+        setTimeout(typeWriter, speed);
+      }
+    }
+    window.onload = typeWriter;
+
+    // Click sound
+    function playClickSound() {
+      document.getElementById("clickSound").play();
+    }
+  </script>
 </body>
 </html>
